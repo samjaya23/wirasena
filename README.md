@@ -40,3 +40,5 @@ Foto makanan pada prototype masih berupa placeholder visual dari remote image so
 - Paket, minimum order, dan area delivery catering
 
 Deployment target: Cloudflare Pages project `ayam-hijrah`.
+
+Trigger: Cloudflare Pages source-connected build.
