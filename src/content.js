@@ -1,7 +1,11 @@
 export const brand = {
   name: 'Ayam Hijrah',
   product: 'Ayam Bakar Madu',
-  address: 'Jl. Sirsak No.21, Jagakarsa, Jakarta Selatan',
+  address: '21, Didepan Zahirah Mart/Salon, Jl. Sirsak No.21, RT.10/RW.1, Jagakarsa, Jakarta Selatan 12620',
+  phone: '0812-7971-441',
+  hours: 'Setiap hari, 10.00–21.00',
+  mapsUrl: 'https://maps.app.goo.gl/b12doqC1ix2HrmMw9',
+  coordinates: { lat: -6.3353469, lng: 106.824485 },
   since: '2020',
   canonical: 'https://ayam-hijrah.pages.dev',
 }
@@ -155,7 +159,7 @@ export const siteCopy = {
   },
   location: {
     title: 'Hari ini mau Ayam Hijrah?',
-    body: 'Datang ke outlet atau pilih channel pesan yang paling nyaman untukmu.',
-    hours: 'Jam operasional mengikuti informasi terbaru outlet. Hubungi tim sebelum datang.',
+    body: 'Datang langsung ke outlet Jagakarsa atau buka petunjuk arah resmi di Google Maps sebelum berangkat.',
+    hours: 'Setiap hari, 10.00–21.00. Cek Google Maps untuk status terbaru.',
   },
 }
