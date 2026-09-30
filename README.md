@@ -38,3 +38,5 @@ Foto makanan pada prototype masih berupa placeholder visual dari remote image so
 - Rating dan review yang boleh ditampilkan
 - Status halal/HaKI terbaru
 - Paket, minimum order, dan area delivery catering
+
+Deployment target: Cloudflare Pages project `ayam-hijrah`.
