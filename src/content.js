@@ -1,0 +1,161 @@
+export const brand = {
+  name: 'Ayam Hijrah',
+  product: 'Ayam Bakar Madu',
+  address: 'Jl. Sirsak No.21, Jagakarsa, Jakarta Selatan',
+  since: '2020',
+  canonical: 'https://ayam-hijrah.pages.dev',
+}
+
+export const orderChannels = {
+  gofood: '',
+  grabfood: '',
+  whatsapp: '',
+}
+
+export const products = [
+  {
+    slug: 'ayam-bakar-madu',
+    name: 'Ayam Bakar Madu',
+    category: 'signature',
+    badge: 'Signature',
+    price: 'Rp 26.000',
+    image: 'https://images.unsplash.com/photo-1598103442097-8b74394b95c6?auto=format&fit=crop&w=1200&q=82',
+    alt: 'Ayam bakar dengan glaze madu dan grill mark',
+    short: 'Ayam bakar signature dengan bumbu meresap, finishing madu, dan sambal khas.',
+    description: 'Ayam muda yang dibumbui hingga meresap, kemudian dibakar dengan finishing madu untuk menghadirkan aroma bara, glaze yang khas, dan rasa yang tetap nyaman disantap sampai suapan terakhir.',
+    detailLead: 'Manis madunya. Gurih ayamnya. Khas sambalnya.',
+    highlights: ['Bumbu meresap', 'Finishing madu', 'Dibakar dengan aroma bara', 'Sambal khas Ayam Hijrah'],
+    pairings: ['Nasi putih hangat', 'Sambal signature', 'Es teh manis'],
+    seoTitle: 'Ayam Bakar Madu — Menu Signature Ayam Hijrah',
+    seoDescription: 'Kenali Ayam Bakar Madu signature Ayam Hijrah: ayam berbumbu meresap, finishing madu, aroma bara, dan sambal khas dari Jagakarsa.',
+  },
+  {
+    slug: 'nasi-ayam-bakar-madu',
+    name: 'Nasi Ayam Bakar Madu',
+    category: 'signature',
+    badge: 'Favorit',
+    price: 'Rp 33.000',
+    image: 'https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=1000&q=82',
+    alt: 'Nasi dengan ayam bakar dan pelengkap',
+    short: 'Paket lengkap untuk makan siang, makan malam, atau makan bareng.',
+    description: 'Rasa signature Ayam Hijrah dalam satu porsi lengkap: ayam bakar madu, nasi hangat, dan pelengkap yang siap menemani hari.',
+    detailLead: 'Satu porsi lengkap, siap jadi teman makan hari ini.',
+    highlights: ['Ayam Bakar Madu', 'Nasi hangat', 'Pelengkap pilihan', 'Praktis untuk delivery'],
+    pairings: ['Sambal signature', 'Sayur', 'Minuman dingin'],
+    seoTitle: 'Nasi Ayam Bakar Madu — Menu Ayam Hijrah',
+    seoDescription: 'Pesan Nasi Ayam Bakar Madu Ayam Hijrah untuk makan siang atau makan malam. Rasa signature dengan nasi hangat dan pelengkap.',
+  },
+  {
+    slug: 'ayam-lada-hitam',
+    name: 'Ayam Lada Hitam',
+    category: 'ayam',
+    badge: 'Ayam',
+    price: 'Cek harga terbaru',
+    image: 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=1000&q=82',
+    alt: 'Hidangan ayam dengan saus lada hitam',
+    short: 'Pilihan ayam dengan saus lada hitam yang gurih dan beraroma.',
+    description: 'Pilihan rasa gurih dengan karakter lada hitam untuk kamu yang ingin mencoba varian ayam selain signature madu.',
+    detailLead: 'Gurih, hangat, dan punya tendangan lada.',
+    highlights: ['Saus lada hitam', 'Aroma gurih', 'Cocok untuk makan harian'],
+    pairings: ['Nasi hangat', 'Sayur', 'Minuman dingin'],
+    seoTitle: 'Ayam Lada Hitam — Menu Ayam Hijrah',
+    seoDescription: 'Ayam Lada Hitam Ayam Hijrah dengan saus gurih dan aroma lada yang hangat. Lihat detail menu dan cara pesan.',
+  },
+  {
+    slug: 'ayam-penyet',
+    name: 'Ayam Penyet',
+    category: 'ayam',
+    badge: 'Ayam',
+    price: 'Cek harga terbaru',
+    image: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=1000&q=82',
+    alt: 'Ayam penyet dengan sambal',
+    short: 'Ayam dengan sambal yang menambah karakter di setiap suapan.',
+    description: 'Menu familiar dengan sambal yang bisa membuat makan sederhana terasa lebih lengkap.',
+    detailLead: 'Familiar rasanya, kuat sambalnya.',
+    highlights: ['Ayam empuk', 'Sambal berkarakter', 'Pilihan makan harian'],
+    pairings: ['Nasi hangat', 'Lalapan', 'Teh manis'],
+    seoTitle: 'Ayam Penyet — Menu Ayam Hijrah',
+    seoDescription: 'Ayam Penyet Ayam Hijrah dengan sambal berkarakter dan pelengkap makan harian. Lihat detail menu dan cara pesan.',
+  },
+  {
+    slug: 'crispy-chicken',
+    name: 'Crispy Chicken',
+    category: 'supporting',
+    badge: 'Supporting',
+    price: 'Cek harga terbaru',
+    image: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=1000&q=82',
+    alt: 'Potongan ayam crispy',
+    short: 'Tekstur renyah untuk pilihan makan yang lebih ringan dan playful.',
+    description: 'Pilihan ayam renyah untuk dinikmati sendiri atau dibagi bersama.',
+    detailLead: 'Renyahnya datang duluan.',
+    highlights: ['Tekstur renyah', 'Cocok untuk sharing', 'Pilihan supporting menu'],
+    pairings: ['Saus pilihan', 'Nasi', 'Minuman dingin'],
+    seoTitle: 'Crispy Chicken — Menu Ayam Hijrah',
+    seoDescription: 'Crispy Chicken Ayam Hijrah untuk pilihan makan renyah dan sharing. Lihat detail menu dan cara pesan.',
+  },
+  {
+    slug: 'sambal-signature',
+    name: 'Sambal Signature',
+    category: 'sambal',
+    badge: 'Pelengkap',
+    price: 'Rp 8.000',
+    image: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=1000&q=82',
+    alt: 'Sambal merah sebagai pelengkap makanan',
+    short: 'Pelengkap dengan rasa pedas dan gurih yang kuat.',
+    description: 'Sambal khas untuk menemani ayam, nasi, dan menu pilihanmu. Porsinya bisa menyesuaikan selera makan.',
+    detailLead: 'Sedikit sambal, beda ceritanya.',
+    highlights: ['Pedas berkarakter', 'Teman ayam bakar', 'Bisa ditambahkan ke pesanan'],
+    pairings: ['Ayam Bakar Madu', 'Nasi', 'Lauk pilihan'],
+    seoTitle: 'Sambal Signature — Pelengkap Ayam Hijrah',
+    seoDescription: 'Sambal Signature Ayam Hijrah dengan karakter pedas dan gurih untuk menemani Ayam Bakar Madu dan menu pilihan lainnya.',
+  },
+]
+
+export const categories = [
+  { label: 'Signature', value: 'signature' },
+  { label: 'Ayam', value: 'ayam' },
+  { label: 'Supporting', value: 'supporting' },
+  { label: 'Sambal', value: 'sambal' },
+]
+
+export const founderStory = {
+  eyebrow: 'Cerita kami',
+  title: 'Berawal dari 3 ekor ayam.',
+  intro: 'Dari dapur rumah, sebuah keputusan untuk hijrah berubah menjadi usaha yang tumbuh bersama pelanggan.',
+  body: [
+    'Ayam Hijrah lahir dari keputusan untuk memulai lagi dengan cara yang lebih dekat dengan keluarga dan pelanggan. Produksi pertama dimulai dari rumah dengan sekitar tiga ekor ayam, lalu rasa diuji kepada anak dan lingkungan sekitar.',
+    'Dari sana, pesanan berkembang melalui layanan delivery. Dapur rumah bertumbuh menjadi kios, lalu menghadirkan pengalaman dine-in dan layanan catering untuk kebutuhan makan bersama.',
+    'Hari ini, Ayam Hijrah tetap membawa produk hero yang sama: Ayam Bakar Madu. Bukan hanya sebagai menu, tetapi sebagai pengingat bahwa pertumbuhan bisa dimulai dari langkah kecil yang dikerjakan dengan konsisten.',
+  ],
+  timeline: [
+    { label: '2020', text: 'Memulai dari rumah' },
+    { label: 'Berikutnya', text: 'Delivery dan pelanggan bertumbuh' },
+    { label: 'Hari ini', text: 'Kios, dine-in, catering, dan berbagi' },
+  ],
+}
+
+export const sedekahLangit = {
+  title: 'Makan enak. Berbagi kebaikan.',
+  body: 'Bagi Ayam Hijrah, perjalanan ini bukan hanya tentang bertumbuh sebagai usaha. Sedekah Langit menjadi ruang untuk berbagi melalui makanan dan mengajak lebih banyak orang ikut dalam kebaikan.',
+  detail: 'Kenali cerita program, aktivitas terbaru, dan cara ikut berkontribusi berdasarkan dokumentasi yang tersedia.',
+}
+
+export const siteCopy = {
+  hero: {
+    eyebrow: 'Signature Ayam Hijrah',
+    title: 'Ayam Bakar Madu yang bikin balik lagi.',
+    lead: 'Ayam empuk dengan bumbu meresap, finishing madu yang khas, dan sambal penuh karakter.',
+    meta: 'Lahir dari Jagakarsa sejak 2020',
+  },
+  catering: {
+    eyebrow: 'Nasi box & catering',
+    title: 'Butuh 10, 50, bahkan ratusan box?',
+    body: 'Nasi box yang enak untuk kantor, meeting, sekolah, pengajian, gathering, dan acara.',
+    note: 'Paket, minimum order, kapasitas, dan area delivery mengikuti konfirmasi terbaru tim Ayam Hijrah.',
+  },
+  location: {
+    title: 'Hari ini mau Ayam Hijrah?',
+    body: 'Datang ke outlet atau pilih channel pesan yang paling nyaman untukmu.',
+    hours: 'Jam operasional mengikuti informasi terbaru outlet. Hubungi tim sebelum datang.',
+  },
+}

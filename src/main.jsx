@@ -1,38 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { createRoot } from 'react-dom/client'
 import './styles.css'
-
-const menuItems = [
-  {
-    name: 'Ayam Bakar Madu',
-    category: 'signature',
-    description: 'Ayam bakar signature dengan glaze madu dan sambal khas.',
-    price: 'Rp 26.000',
-    badge: 'Signature',
-    image: 'https://images.unsplash.com/photo-1598103442097-8b74394b95c6?auto=format&fit=crop&w=900&q=85',
-  },
-  {
-    name: 'Nasi Ayam Bakar Madu',
-    category: 'signature',
-    description: 'Paket lengkap untuk makan siang atau makan malam.',
-    price: 'Rp 33.000',
-    badge: 'Favorit',
-    image: 'https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=900&q=85',
-  },
-  {
-    name: 'Sambal Signature',
-    category: 'sambal',
-    description: 'Pelengkap dengan karakter pedas dan gurih yang kuat.',
-    price: 'Rp 8.000',
-    badge: 'Pelengkap',
-    image: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=900&q=85',
-  },
-]
-
-const categories = [
-  { label: 'Signature', value: 'signature' },
-  { label: 'Ayam', value: 'ayam' },
-  { label: 'Sambal', value: 'sambal' },
-]
+import { brand, categories, founderStory, orderChannels, products, sedekahLangit, siteCopy } from './content'
 
 const Icon = ({ name, size = 20 }) => {
   const common = { width: size, height: size, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: '1.8', strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': true }
@@ -41,166 +10,140 @@ const Icon = ({ name, size = 20 }) => {
     pin: <><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z" /><circle cx="12" cy="10" r="2.5" /></>,
     menu: <><path d="M4 6h16M4 12h16M4 18h16" /></>,
     close: <><path d="m6 6 12 12M18 6 6 18" /></>,
-    chevron: <path d="m6 9 6 6 6-6" />,
     flame: <><path d="M12 21c4.5 0 7-3 7-6.5 0-2.6-1.4-4.9-3.7-6.8.1 2.2-1.1 3.5-2.1 4.1.1-3.5-1.5-6.2-4.6-8.8.2 3.4-3.6 5.5-3.6 10.2C5 18 8.1 21 12 21Z" /></>,
+    check: <path d="m5 12 4 4L19 6" />,
+    copy: <><rect x="9" y="9" width="10" height="10" rx="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></>,
     instagram: <><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><path d="M17.5 6.5h.01" /></>,
   }
   return <svg {...common}>{paths[name]}</svg>
 }
 
-function App() {
-  const [activeCategory, setActiveCategory] = useState('signature')
-  const [orderOpen, setOrderOpen] = useState(false)
-  const [mobileOpen, setMobileOpen] = useState(false)
-  const [noticeOpen, setNoticeOpen] = useState(true)
-
-  useEffect(() => {
-    document.body.classList.toggle('modal-open', orderOpen || mobileOpen)
-    return () => document.body.classList.remove('modal-open')
-  }, [orderOpen, mobileOpen])
-
-  const visibleItems = menuItems.filter((item) => item.category === activeCategory)
-
-  const scrollTo = (id) => {
-    setMobileOpen(false)
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+const SmartLink = ({ href, children, className = '', onNavigate }) => {
+  const handleClick = (event) => {
+    if (href?.startsWith('/') && !href.startsWith('//')) {
+      event.preventDefault()
+      onNavigate?.(href)
+    }
   }
+  return <a className={className} href={href} onClick={handleClick}>{children}</a>
+}
 
-  return (
-    <div className="site-shell">
-      {noticeOpen && (
-        <div className="announcement">
-          <div className="container announcement-inner">
-            <span><span className="announcement-dot" /> Pesan nasi box untuk meeting, gathering, dan acara.</span>
-            <button className="announcement-close" onClick={() => setNoticeOpen(false)} aria-label="Tutup pengumuman"><Icon name="close" size={16} /></button>
-          </div>
-        </div>
-      )}
+const PrimaryButton = ({ children, onClick, className = '', type = 'button' }) => <button type={type} className={`button button-primary ${className}`} onClick={onClick}>{children}</button>
 
-      <header className="site-header">
-        <div className="container nav-wrap">
-          <a className="brand" href="#top" aria-label="Ayam Hijrah home">
-            <span className="brand-mark">AH</span>
-            <span className="brand-wordmark"><strong>Ayam</strong><em>Hijrah</em></span>
-          </a>
-          <nav className={`desktop-nav ${mobileOpen ? 'is-open' : ''}`} aria-label="Navigasi utama">
-            <button onClick={() => scrollTo('menu')}>Menu</button>
-            <button onClick={() => scrollTo('catering')}>Catering</button>
-            <button onClick={() => scrollTo('cerita')}>Cerita Kami</button>
-            <button onClick={() => scrollTo('sedekah')}>Sedekah Langit</button>
-            <button onClick={() => scrollTo('partnership')}>Partnership</button>
-          </nav>
-          <div className="nav-actions">
-            <button className="button button-primary button-small" onClick={() => setOrderOpen(true)}>Pesan Sekarang <Icon name="arrow" size={16} /></button>
-            <button className="menu-toggle" onClick={() => setMobileOpen(!mobileOpen)} aria-label={mobileOpen ? 'Tutup menu' : 'Buka menu'} aria-expanded={mobileOpen}><Icon name={mobileOpen ? 'close' : 'menu'} size={22} /></button>
-          </div>
-        </div>
-        {mobileOpen && (
-          <div className="mobile-panel">
-            <div className="container mobile-panel-inner">
-              <button onClick={() => scrollTo('menu')}>Menu <Icon name="arrow" size={17} /></button>
-              <button onClick={() => scrollTo('catering')}>Catering <Icon name="arrow" size={17} /></button>
-              <button onClick={() => scrollTo('cerita')}>Cerita Kami <Icon name="arrow" size={17} /></button>
-              <button onClick={() => scrollTo('sedekah')}>Sedekah Langit <Icon name="arrow" size={17} /></button>
-              <button onClick={() => scrollTo('partnership')}>Partnership <Icon name="arrow" size={17} /></button>
-              <button className="button button-primary mobile-order" onClick={() => { setMobileOpen(false); setOrderOpen(true) }}>Pesan Sekarang <Icon name="arrow" size={17} /></button>
-            </div>
-          </div>
-        )}
-      </header>
+function SiteHeader({ navigate, onOrder }) {
+  const [open, setOpen] = useState(false)
+  const go = (path) => { setOpen(false); navigate(path) }
+  return <>
+    <div className="announcement"><div className="container announcement-inner"><span><span className="announcement-dot" /> Pesan nasi box untuk meeting, gathering, dan acara.</span></div></div>
+    <header className="site-header">
+      <div className="container nav-wrap">
+        <SmartLink href="/" onNavigate={navigate} className="brand" aria-label="Ayam Hijrah home"><span className="brand-mark">AH</span><span className="brand-wordmark"><strong>Ayam</strong><em>Hijrah</em></span></SmartLink>
+        <nav className="desktop-nav" aria-label="Navigasi utama"><SmartLink href="/menu" onNavigate={navigate}>Menu</SmartLink><SmartLink href="/pesan" onNavigate={navigate}>Pesan</SmartLink><SmartLink href="/cerita-kami" onNavigate={navigate}>Cerita Kami</SmartLink><SmartLink href="/sedekah-langit" onNavigate={navigate}>Sedekah Langit</SmartLink><SmartLink href="/catering" onNavigate={navigate}>Catering</SmartLink></nav>
+        <div className="nav-actions"><PrimaryButton className="button-small" onClick={onOrder}>Pesan Sekarang <Icon name="arrow" size={16} /></PrimaryButton><button className="menu-toggle" onClick={() => setOpen(!open)} aria-label={open ? 'Tutup menu' : 'Buka menu'} aria-expanded={open}><Icon name={open ? 'close' : 'menu'} size={22} /></button></div>
+      </div>
+      {open && <div className="mobile-panel"><div className="container mobile-panel-inner"><button onClick={() => go('/menu')}>Menu <Icon name="arrow" size={17} /></button><button onClick={() => go('/pesan')}>Pesan <Icon name="arrow" size={17} /></button><button onClick={() => go('/cerita-kami')}>Cerita Kami <Icon name="arrow" size={17} /></button><button onClick={() => go('/sedekah-langit')}>Sedekah Langit <Icon name="arrow" size={17} /></button><button onClick={() => go('/catering')}>Catering <Icon name="arrow" size={17} /></button><PrimaryButton className="mobile-order" onClick={onOrder}>Pesan Sekarang <Icon name="arrow" size={17} /></PrimaryButton></div></div>}
+    </header>
+  </>
+}
 
-      <main id="top">
-        <section className="hero section-dark">
-          <div className="hero-glow hero-glow-one" />
-          <div className="hero-glow hero-glow-two" />
-          <div className="container hero-grid">
-            <div className="hero-copy">
-              <div className="eyebrow eyebrow-light"><span className="eyebrow-line" /> Signature Ayam Hijrah</div>
-              <h1>Ayam Bakar Madu<br /><span>yang bikin balik lagi.</span></h1>
-              <p className="hero-lead">Ayam empuk dengan bumbu meresap, finishing madu yang khas, dan sambal penuh karakter.</p>
-              <div className="hero-actions">
-                <button className="button button-primary" onClick={() => setOrderOpen(true)}>Pesan Sekarang <Icon name="arrow" size={18} /></button>
-                <button className="button button-ghost" onClick={() => scrollTo('menu')}>Lihat Menu</button>
-              </div>
-              <div className="hero-meta"><span className="meta-icon"><Icon name="pin" size={15} /></span> Lahir dari Jagakarsa sejak 2020</div>
-            </div>
-            <div className="hero-visual">
-              <div className="hero-image-frame">
-                <img src="https://images.unsplash.com/photo-1598103442097-8b74394b95c6?auto=format&fit=crop&w=1400&q=90" alt="Ayam bakar dengan glaze madu dan grill mark" />
-                <div className="hero-image-overlay" />
-              </div>
-              <div className="hero-stamp"><span>HONEY</span><strong>×</strong><span>FIRE</span></div>
-              <div className="hero-note"><span className="note-dot" /> Bumbu meresap. Bara terasa.</div>
-            </div>
-          </div>
-        </section>
+function SiteFooter({ navigate }) {
+  return <footer className="site-footer"><div className="container footer-grid"><div><SmartLink href="/" onNavigate={navigate} className="brand brand-footer"><span className="brand-mark">AH</span><span className="brand-wordmark"><strong>Ayam</strong><em>Hijrah</em></span></SmartLink><p>Ayam Bakar Madu dengan rasa yang punya cerita.</p><div className="socials"><a href="#instagram" aria-label="Instagram"><Icon name="instagram" size={18} /></a><SmartLink href="/lokasi" onNavigate={navigate} aria-label="Lokasi"><Icon name="pin" size={18} /></SmartLink></div></div><div><h3>Jelajahi</h3><SmartLink href="/menu" onNavigate={navigate}>Menu</SmartLink><SmartLink href="/catering" onNavigate={navigate}>Catering</SmartLink><SmartLink href="/cerita-kami" onNavigate={navigate}>Cerita Kami</SmartLink><SmartLink href="/sedekah-langit" onNavigate={navigate}>Sedekah Langit</SmartLink></div><div><h3>Pesan</h3><SmartLink href="/pesan" onNavigate={navigate}>Pesan online</SmartLink><SmartLink href="/menu/ayam-bakar-madu" onNavigate={navigate}>Ayam Bakar Madu</SmartLink><SmartLink href="/pesan?channel=whatsapp" onNavigate={navigate}>WhatsApp</SmartLink><SmartLink href="/lokasi" onNavigate={navigate}>Lokasi Outlet</SmartLink></div><div><h3>Kontak</h3><span>{brand.address}</span><SmartLink href="/pesan" onNavigate={navigate}>Mulai pemesanan</SmartLink></div></div><div className="container footer-bottom"><span>© 2026 Ayam Hijrah. Semua hak dilindungi.</span><span>Privacy · Terms</span></div></footer>
+}
 
-        <section className="quick-strip">
-          <div className="container quick-grid">
-            <button onClick={() => setOrderOpen(true)}><span className="quick-icon"><Icon name="flame" size={20} /></span><span><strong>Pesan delivery</strong><small>GoFood · GrabFood · WhatsApp</small></span><Icon name="arrow" size={18} /></button>
-            <button onClick={() => scrollTo('menu')}><span className="quick-icon honey-icon">✦</span><span><strong>Lihat menu signature</strong><small>Ayam Bakar Madu & pelengkap</small></span><Icon name="arrow" size={18} /></button>
-            <button onClick={() => scrollTo('lokasi')}><span className="quick-icon"><Icon name="pin" size={20} /></span><span><strong>Datang ke outlet</strong><small>Jl. Sirsak No.21, Jagakarsa</small></span><Icon name="arrow" size={18} /></button>
-          </div>
-        </section>
+function OrderModal({ navigate, close }) {
+  const options = [
+    { label: 'GoFood', caption: 'Pesan delivery', icon: 'G', className: 'gofood', url: orderChannels.gofood },
+    { label: 'GrabFood', caption: 'Pesan delivery', icon: 'G', className: 'grab', url: orderChannels.grabfood },
+    { label: 'WhatsApp', caption: 'Chat untuk pesan', icon: 'W', className: 'wa', url: orderChannels.whatsapp },
+    { label: 'Pilih menu dulu', caption: 'Susun pesananmu', icon: '✦', className: 'outlet', url: '/pesan' },
+  ]
+  return <div className="modal-backdrop" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && close()}><div className="order-modal" role="dialog" aria-modal="true" aria-labelledby="order-title"><button className="modal-close" onClick={close} aria-label="Tutup order router"><Icon name="close" size={21} /></button><span className="modal-kicker">Pesan Ayam Hijrah</span><h2 id="order-title">Mau pesan<br /><span>lewat mana?</span></h2><p>Pilih channel yang paling nyaman untukmu.</p><div className="order-options">{options.map((item) => <SmartLink key={item.label} href={item.url || '/pesan'} onNavigate={(path) => { close(); navigate(path) }}><span className={`channel-icon ${item.className}`}>{item.icon === '✦' ? item.icon : item.icon}</span><span><strong>{item.label}</strong><small>{item.caption}</small></span><Icon name="arrow" size={17} /></SmartLink>)}</div><small className="modal-note">Link delivery resmi akan aktif setelah URL channel dikonfirmasi tim Ayam Hijrah.</small></div></div>
+}
 
-        <section className="formula section-cream" id="formula">
-          <div className="container">
-            <div className="section-intro centered"><div className="eyebrow"><span className="eyebrow-line" /> Kenapa berbeda</div><h2>Bukan sekadar<br /><span>ayam bakar.</span></h2><p>Lima langkah sederhana yang membuat rasa Ayam Hijrah punya karakter sendiri.</p></div>
-            <div className="formula-grid">
-              {[
-                ['01', 'Ayam', 'Ayam muda dengan tekstur yang nyaman disantap.'],
-                ['02', 'Bumbu', 'Bumbu dimasukkan agar rasa tidak berhenti di permukaan.'],
-                ['03', 'Madu', 'Finishing madu memberi glaze manis yang khas.'],
-                ['04', 'Bara Api', 'Dibakar untuk aroma dan grill mark yang menggoda.'],
-                ['05', 'Sambal', 'Sambal khas sebagai penyeimbang rasa.'],
-              ].map(([number, title, copy], index) => (
-                <div className={`formula-item ${index === 2 ? 'formula-item-highlight' : ''}`} key={number}>
-                  <span className="formula-number">{number}</span><div className="formula-icon">{index === 2 ? '✦' : index === 3 ? '⌁' : index === 4 ? '♨' : index === 0 ? '◒' : '◌'}</div><h3>{title}</h3><p>{copy}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+function ProductCard({ item, navigate }) {
+  return <article className="product-card"><SmartLink href={`/menu/${item.slug}`} onNavigate={navigate} className="product-image-wrap"><img src={item.image} alt={item.alt} loading="lazy" decoding="async" width="900" height="780" /><span className="product-badge">{item.badge}</span></SmartLink><div className="product-info"><div><h3>{item.name}</h3><p>{item.short}</p></div><div className="product-bottom"><strong>{item.price}</strong><SmartLink href={`/pesan?product=${item.slug}`} onNavigate={navigate}>Pesan <Icon name="arrow" size={15} /></SmartLink></div></div></article>
+}
 
-        <section className="menu-section section-light" id="menu">
-          <div className="container">
-            <div className="section-heading-row"><div><div className="eyebrow"><span className="eyebrow-line" /> Wajib coba</div><h2>Menu favorit<br /><span>Ayam Hijrah.</span></h2></div><button className="text-link desktop-only" onClick={() => setOrderOpen(true)}>Pesan dari menu <Icon name="arrow" size={18} /></button></div>
-            <div className="category-tabs" role="tablist" aria-label="Kategori menu">{categories.map((category) => <button key={category.value} role="tab" aria-selected={activeCategory === category.value} className={activeCategory === category.value ? 'active' : ''} onClick={() => setActiveCategory(category.value)}>{category.label}</button>)}</div>
-            <div className="menu-grid">{visibleItems.map((item) => <article className="product-card" key={item.name}><div className="product-image-wrap"><img src={item.image} alt={item.name} /><span className="product-badge">{item.badge}</span></div><div className="product-info"><div><h3>{item.name}</h3><p>{item.description}</p></div><div className="product-bottom"><strong>{item.price}</strong><button onClick={() => setOrderOpen(true)}>Pesan <Icon name="arrow" size={15} /></button></div></div></article>)}</div>
-            <div className="mobile-center"><button className="button button-secondary" onClick={() => setOrderOpen(true)}>Lihat semua menu <Icon name="arrow" size={16} /></button></div>
-          </div>
-        </section>
+function HomePage({ navigate, openOrder }) {
+  const [activeCategory, setActiveCategory] = useState('signature')
+  const visibleItems = products.filter((item) => item.category === activeCategory).slice(0, 3)
+  const scrollTo = (id) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  return <>
+    <main id="top">
+      <section className="hero section-dark"><div className="hero-glow hero-glow-one" /><div className="hero-glow hero-glow-two" /><div className="container hero-grid"><div className="hero-copy"><div className="eyebrow eyebrow-light"><span className="eyebrow-line" /> {siteCopy.hero.eyebrow}</div><h1>{siteCopy.hero.title.split(' yang ')[0]}<br /><span>yang bikin balik lagi.</span></h1><p className="hero-lead">{siteCopy.hero.lead}</p><div className="hero-actions"><PrimaryButton onClick={openOrder}>Pesan Sekarang <Icon name="arrow" size={18} /></PrimaryButton><button className="button button-ghost" onClick={() => scrollTo('menu')}>Lihat Menu</button></div><div className="hero-meta"><span className="meta-icon"><Icon name="pin" size={15} /></span> {siteCopy.hero.meta}</div></div><div className="hero-visual"><div className="hero-image-frame"><img src="https://images.unsplash.com/photo-1598103442097-8b74394b95c6?auto=format&fit=crop&w=1400&q=82" alt="Ayam Bakar Madu dengan glaze dan grill mark" width="1400" height="1050" fetchPriority="high" /><div className="hero-image-overlay" /></div><div className="hero-stamp"><span>HONEY</span><strong>×</strong><span>FIRE</span></div><div className="hero-note"><span className="note-dot" /> Bumbu meresap. Bara terasa.</div></div></div></section>
+      <section className="quick-strip"><div className="container quick-grid"><button onClick={openOrder}><span className="quick-icon"><Icon name="flame" size={20} /></span><span><strong>Pesan delivery</strong><small>GoFood · GrabFood · WhatsApp</small></span><Icon name="arrow" size={18} /></button><button onClick={() => scrollTo('menu')}><span className="quick-icon honey-icon">✦</span><span><strong>Lihat menu signature</strong><small>Ayam Bakar Madu & pelengkap</small></span><Icon name="arrow" size={18} /></button><SmartLink href="/lokasi" onNavigate={navigate} className="quick-link"><span className="quick-icon"><Icon name="pin" size={20} /></span><span><strong>Datang ke outlet</strong><small>{brand.address}</small></span><Icon name="arrow" size={18} /></SmartLink></div></section>
+      <section className="formula section-cream"><div className="container"><div className="section-intro centered"><div className="eyebrow"><span className="eyebrow-line" /> Kenapa berbeda</div><h2>Bukan sekadar<br /><span>ayam bakar.</span></h2><p>Lima langkah sederhana yang membuat rasa Ayam Hijrah punya karakter sendiri.</p></div><div className="formula-grid">{[['01', 'Ayam', 'Ayam muda dengan tekstur yang nyaman disantap.'], ['02', 'Bumbu', 'Bumbu dimasukkan agar rasa tidak berhenti di permukaan.'], ['03', 'Madu', 'Finishing madu memberi glaze manis yang khas.'], ['04', 'Bara Api', 'Dibakar untuk aroma dan grill mark yang menggoda.'], ['05', 'Sambal', 'Sambal khas sebagai penyeimbang rasa.']].map(([number, title, copy], index) => <div className={`formula-item ${index === 2 ? 'formula-item-highlight' : ''}`} key={number}><span className="formula-number">{number}</span><div className="formula-icon">{index === 2 ? '✦' : index === 3 ? '⌁' : index === 4 ? '♨' : index === 0 ? '◒' : '◌'}</div><h3>{title}</h3><p>{copy}</p></div>)}</div></div></section>
+      <section className="menu-section section-light" id="menu"><div className="container"><div className="section-heading-row"><div><div className="eyebrow"><span className="eyebrow-line" /> Wajib coba</div><h2>Menu favorit<br /><span>Ayam Hijrah.</span></h2></div><SmartLink className="text-link desktop-only" href="/menu" onNavigate={navigate}>Lihat semua menu <Icon name="arrow" size={18} /></SmartLink></div><div className="category-tabs" role="tablist" aria-label="Kategori menu">{categories.map((category) => <button key={category.value} role="tab" aria-selected={activeCategory === category.value} className={activeCategory === category.value ? 'active' : ''} onClick={() => setActiveCategory(category.value)}>{category.label}</button>)}</div><div className="menu-grid">{visibleItems.map((item) => <ProductCard key={item.slug} item={item} navigate={navigate} />)}</div><div className="mobile-center"><SmartLink className="button button-secondary" href="/menu" onNavigate={navigate}>Lihat semua menu <Icon name="arrow" size={16} /></SmartLink></div></div></section>
+      <section className="proof-section section-cream"><div className="container proof-layout"><div className="proof-score"><span className="score-star">✦</span><strong>Sejak</strong><span>2020</span><small>Berawal dari dapur rumah<br /><em>bertumbuh bersama pelanggan</em></small></div><div className="proof-quote"><div className="quote-mark">“</div><blockquote>Ayam Bakar Madu yang punya rasa, aroma bara, dan cerita sendiri.</blockquote><div className="quote-source">Produk hero Ayam Hijrah · Jagakarsa, Jakarta Selatan</div></div><div className="proof-side"><span className="proof-label">Tempat kami melayani</span><strong>Makan harian<br />Catering & nasi box</strong><SmartLink className="text-link" href="/catering" onNavigate={navigate}>Lihat kebutuhan acara <Icon name="arrow" size={16} /></SmartLink></div></div></section>
+      <section className="catering section-dark" id="catering"><div className="container catering-grid"><div className="catering-image"><img src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1200&q=82" alt="Nasi box untuk kebutuhan catering" width="1200" height="900" loading="lazy" decoding="async" /><div className="image-caption"><span>Untuk acara</span><strong>yang berarti.</strong></div></div><div className="catering-copy"><div className="eyebrow eyebrow-light"><span className="eyebrow-line" /> {siteCopy.catering.eyebrow}</div><h2>{siteCopy.catering.title.split(', 50, ')[0]}, 50,<br /><span>bahkan ratusan box?</span></h2><p>{siteCopy.catering.body}</p><div className="catering-points"><span><Icon name="check" size={14} /> Paket sesuai kebutuhan</span><span><Icon name="check" size={14} /> Tim siap membantu</span><span><Icon name="check" size={14} /> Pesan lebih terarah</span></div><SmartLink className="button button-primary" href="/catering" onNavigate={navigate}>Minta Penawaran Catering <Icon name="arrow" size={18} /></SmartLink><small className="disclaimer">{siteCopy.catering.note}</small></div></div></section>
+      <section className="story section-light" id="cerita"><div className="container story-grid"><div className="story-copy"><div className="eyebrow"><span className="eyebrow-line" /> {founderStory.eyebrow}</div><h2>{founderStory.title.split(' dari ')[0]} dari<br /><span>3 ekor ayam.</span></h2><p>{founderStory.intro}</p><div className="story-timeline">{founderStory.timeline.slice(0, 2).map((item, index) => <span className="story-timeline-node" key={item.label}><strong>{item.label}</strong><small>{item.text}</small>{index === 0 && <i />}</span>)}</div><SmartLink className="text-link" href="/cerita-kami" onNavigate={navigate}>Baca cerita lengkap <Icon name="arrow" size={18} /></SmartLink></div><div className="story-collage"><div className="story-main-image"><img src="https://images.unsplash.com/photo-1603360946369-dc9bb6258143?auto=format&fit=crop&w=1100&q=82" alt="Ayam bakar di atas meja makan" width="1100" height="900" loading="lazy" decoding="async" /></div><div className="story-small-image"><img src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&w=700&q=82" alt="Suasana dapur dan persiapan makanan" width="700" height="850" loading="lazy" decoding="async" /></div><div className="story-label">Dari Jagakarsa<br /><strong>untuk lebih banyak cerita.</strong></div></div></div></section>
+      <section className="sedekah section-honey" id="sedekah"><div className="container sedekah-grid"><div className="sedekah-copy"><div className="eyebrow"><span className="eyebrow-line" /> Sedekah Langit</div><h2>{sedekahLangit.title.split('. ')[0]}.<br /><span>{sedekahLangit.title.split('. ')[1]}</span></h2><p>{sedekahLangit.body}</p><div className="sedekah-actions"><SmartLink className="button button-dark" href="/sedekah-langit" onNavigate={navigate}>Kenal program <Icon name="arrow" size={17} /></SmartLink><SmartLink className="text-link text-link-dark" href="/sedekah-langit" onNavigate={navigate}>Ikut berbagi <Icon name="arrow" size={17} /></SmartLink></div><small className="disclaimer">{sedekahLangit.detail}</small></div><div className="sedekah-art"><div className="sun-disc" /><div className="share-card"><span className="share-icon">✦</span><strong>Yang baik,<br />dibagikan.</strong><small>HONEY × FIRE × HIJRAH</small></div><div className="art-leaf leaf-one" /><div className="art-leaf leaf-two" /></div></div></section>
+      <section className="location section-cream" id="lokasi"><div className="container location-grid"><div className="map-placeholder"><div className="map-pattern" /><div className="map-pin"><Icon name="pin" size={22} /></div><span>Jagakarsa, Jakarta Selatan</span></div><div className="location-copy"><div className="eyebrow"><span className="eyebrow-line" /> Temui kami</div><h2>{siteCopy.location.title.split(' mau ')[0]} mau<br /><span>Ayam Hijrah?</span></h2><p>{siteCopy.location.body}</p><div className="address"><Icon name="pin" size={20} /><div><strong>Ayam Hijrah Jagakarsa</strong><span>{brand.address}</span></div></div><div className="hours"><strong>Jam operasional</strong><span>{siteCopy.location.hours}</span></div><div className="location-actions"><PrimaryButton onClick={openOrder}>Pesan Sekarang <Icon name="arrow" size={17} /></PrimaryButton><SmartLink className="button button-secondary" href="/lokasi" onNavigate={navigate}>Petunjuk Arah <Icon name="pin" size={17} /></SmartLink></div></div></div></section>
+      <section className="final-cta section-dark"><div className="container final-cta-inner"><div className="eyebrow eyebrow-light"><span className="eyebrow-line" /> Sampai jumpa di meja makan</div><h2>Hari ini mau<br /><span>Ayam Hijrah?</span></h2><PrimaryButton className="button-large" onClick={openOrder}>Pesan Sekarang <Icon name="arrow" size={19} /></PrimaryButton><p>Ayam Bakar Madu yang bikin balik lagi.</p></div></section>
+    </main>
+    <button className="mobile-sticky-order" onClick={openOrder}>Pesan Sekarang <Icon name="arrow" size={17} /></button>
+  </>
+}
 
-        <section className="proof-section section-cream">
-          <div className="container proof-layout"><div className="proof-score"><span className="score-star">★</span><strong>4,7</strong><span>/ 5</span><small>Google Business Profile<br /><em>Data perlu diverifikasi ulang</em></small></div><div className="proof-quote"><div className="quote-mark">“</div><blockquote>Rasa yang familiar, tapi punya karakter sendiri. Ayamnya empuk dan sambalnya bikin ingin pesan lagi.</blockquote><div className="quote-source">Contoh format review pelanggan <span>·</span> Ganti dengan review terverifikasi</div></div><div className="proof-side"><span className="proof-label">Ditemukan di</span><strong>Google · GrabFood<br />Media · e-Order</strong><button className="text-link">Lihat cerita kami <Icon name="arrow" size={16} /></button></div></div>
-        </section>
+function MenuPage({ navigate }) {
+  return <main className="inner-page"><section className="inner-hero section-dark"><div className="container"><div className="eyebrow eyebrow-light"><span className="eyebrow-line" /> Menu Ayam Hijrah</div><h1>Rasa yang<br /><span>punya cerita.</span></h1><p>Pilih menu untuk makan sendiri, berbagi, atau melengkapi acara.</p></div></section><section className="menu-section section-light"><div className="container menu-page-grid"><div className="menu-page-intro"><div className="eyebrow"><span className="eyebrow-line" /> Pilihan kami</div><h2>Temukan<br /><span>favoritmu.</span></h2><p>Ayam Bakar Madu tetap menjadi produk hero. Menu lainnya hadir sebagai pilihan untuk kebutuhan makan yang berbeda.</p></div><div className="menu-grid menu-grid-wide">{products.map((item) => <ProductCard key={item.slug} item={item} navigate={navigate} />)}</div></div></section></main>
+}
 
-        <section className="catering section-dark" id="catering">
-          <div className="container catering-grid"><div className="catering-image"><img src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1200&q=85" alt="Nasi box untuk kebutuhan catering" /><div className="image-caption"><span>Untuk acara</span><strong>yang berarti.</strong></div></div><div className="catering-copy"><div className="eyebrow eyebrow-light"><span className="eyebrow-line" /> Nasi box & catering</div><h2>Butuh 10, 50,<br /><span>bahkan ratusan box?</span></h2><p>Nasi box yang enak untuk kantor, meeting, sekolah, pengajian, gathering, dan acara.</p><div className="catering-points"><span>✓ Paket fleksibel</span><span>✓ Tim siap membantu</span><span>✓ Pesan lebih terarah</span></div><button className="button button-primary" onClick={() => scrollTo('partnership')}>Minta Penawaran Catering <Icon name="arrow" size={18} /></button><small className="disclaimer">Kapasitas, minimum order, dan area delivery mengikuti konfirmasi terbaru tim Ayam Hijrah.</small></div></div>
-        </section>
+function ProductPage({ navigate, product }) {
+  const related = products.filter((item) => item.slug !== product.slug).slice(0, 3)
+  return <main className="inner-page"><div className="container breadcrumb"><SmartLink href="/menu" onNavigate={navigate}>Menu</SmartLink><span>/</span><span>{product.name}</span></div><section className="product-detail section-light"><div className="container product-detail-grid"><div className="product-detail-image"><img src={product.image} alt={product.alt} width="1200" height="950" fetchPriority="high" /></div><div className="product-detail-copy"><div className="eyebrow"><span className="eyebrow-line" /> {product.badge}</div><h1>{product.name}</h1><p className="detail-lead">{product.detailLead}</p><p>{product.description}</p><div className="detail-price"><strong>{product.price}</strong><span>Harga mengikuti menu terbaru yang dikonfirmasi tim Ayam Hijrah.</span></div><SmartLink className="button button-primary" href={`/pesan?product=${product.slug}`} onNavigate={navigate}>Pesan menu ini <Icon name="arrow" size={18} /></SmartLink><small className="detail-note">Untuk delivery, pilih channel pemesanan setelah menambahkan menu.</small></div></div></section><section className="detail-info section-cream"><div className="container detail-info-grid"><div><div className="eyebrow"><span className="eyebrow-line" /> Yang kamu dapat</div><h2>Rasa yang<br /><span>terasa.</span></h2></div><div className="highlight-grid">{product.highlights.map((item) => <div className="highlight-item" key={item}><Icon name="check" size={18} /><span>{item}</span></div>)}</div></div></section><section className="pairing-section section-light"><div className="container"><div className="section-heading-row"><div><div className="eyebrow"><span className="eyebrow-line" /> Teman makan</div><h2>Cocok dipadukan<br /><span>dengan.</span></h2></div><SmartLink className="text-link" href="/menu" onNavigate={navigate}>Kembali ke menu <Icon name="arrow" size={18} /></SmartLink></div><div className="pairing-grid">{product.pairings.map((item, index) => <div className="pairing-card" key={item}><span>0{index + 1}</span><strong>{item}</strong></div>)}</div></div></section><section className="related-section section-cream"><div className="container"><div className="eyebrow"><span className="eyebrow-line" /> Mungkin kamu suka</div><h2>Menu lainnya.</h2><div className="menu-grid">{related.map((item) => <ProductCard key={item.slug} item={item} navigate={navigate} />)}</div></div></section></main>
+}
 
-        <section className="story section-light" id="cerita">
-          <div className="container story-grid"><div className="story-copy"><div className="eyebrow"><span className="eyebrow-line" /> Cerita kami</div><h2>Berawal dari<br /><span>3 ekor ayam.</span></h2><p>Dari dapur rumah, sebuah keputusan untuk hijrah berubah menjadi usaha yang tumbuh bersama pelanggan.</p><div className="story-timeline"><div><strong>2020</strong><span>Rumah</span></div><i /><div><strong>Hari ini</strong><span>Terus bertumbuh</span></div></div><button className="text-link" onClick={() => scrollTo('sedekah')}>Baca cerita lengkap <Icon name="arrow" size={18} /></button></div><div className="story-collage"><div className="story-main-image"><img src="https://images.unsplash.com/photo-1603360946369-dc9bb6258143?auto=format&fit=crop&w=1100&q=85" alt="Ayam bakar di atas meja makan" /></div><div className="story-small-image"><img src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&w=700&q=85" alt="Suasana dapur dan persiapan makanan" /></div><div className="story-label">Dari Jagakarsa<br /><strong>untuk lebih banyak cerita.</strong></div></div></div>
-        </section>
+function CheckoutPage({ navigate }) {
+  const params = new URLSearchParams(window.location.search)
+  const [selectedProduct, setSelectedProduct] = useState(params.get('product') || products[0].slug)
+  const [channel, setChannel] = useState(params.get('channel') || 'whatsapp')
+  const [quantity, setQuantity] = useState(1)
+  const [name, setName] = useState('')
+  const [phone, setPhone] = useState('')
+  const [notes, setNotes] = useState('')
+  const [submitted, setSubmitted] = useState(false)
+  const product = products.find((item) => item.slug === selectedProduct) || products[0]
+  const summary = `Halo Ayam Hijrah, saya ${name || '[Nama]'}. Saya ingin memesan ${product.name} sebanyak ${quantity} porsi. ${notes ? `Catatan: ${notes}` : ''}`
+  const copySummary = async () => { await navigator.clipboard?.writeText(summary); setSubmitted(true) }
+  const submit = (event) => { event.preventDefault(); setSubmitted(true) }
+  return <main className="inner-page checkout-page"><section className="inner-hero section-dark"><div className="container"><div className="eyebrow eyebrow-light"><span className="eyebrow-line" /> Pemesanan</div><h1>Siap pesan<br /><span>Ayam Hijrah?</span></h1><p>Susun kebutuhanmu. Tim kami akan membantu mengonfirmasi pesanan dan channel order.</p></div></section><section className="checkout-section section-light"><div className="container checkout-layout"><form className="checkout-form" onSubmit={submit}><div className="form-section"><div className="eyebrow"><span className="eyebrow-line" /> 01 · Pilih pesanan</div><label>Menu utama<select value={selectedProduct} onChange={(event) => setSelectedProduct(event.target.value)}>{products.map((item) => <option key={item.slug} value={item.slug}>{item.name}</option>)}</select></label><label>Jumlah porsi<div className="quantity-control"><button type="button" onClick={() => setQuantity(Math.max(1, quantity - 1))}>−</button><strong>{quantity}</strong><button type="button" onClick={() => setQuantity(quantity + 1)}>+</button></div></label><label>Catatan pesanan <textarea value={notes} onChange={(event) => setNotes(event.target.value)} placeholder="Contoh: sambal lebih, tanpa lalapan, atau waktu pengambilan." rows="3" /></label></div><div className="form-section"><div className="eyebrow"><span className="eyebrow-line" /> 02 · Kontak</div><label>Nama lengkap<input required value={name} onChange={(event) => setName(event.target.value)} placeholder="Nama kamu" /></label><label>Nomor WhatsApp<input required value={phone} onChange={(event) => setPhone(event.target.value)} placeholder="08xxxxxxxxxx" inputMode="tel" /></label></div><div className="form-section"><div className="eyebrow"><span className="eyebrow-line" /> 03 · Channel order</div><div className="channel-choice">{['whatsapp', 'gofood', 'grabfood'].map((item) => <label key={item} className={channel === item ? 'selected' : ''}><input type="radio" name="channel" value={item} checked={channel === item} onChange={(event) => setChannel(event.target.value)} /><span>{item === 'whatsapp' ? 'WhatsApp' : item === 'gofood' ? 'GoFood' : 'GrabFood'}</span><small>{orderChannels[item] ? 'Link tersedia' : 'Akan dikonfirmasi'}</small></label>)}</div></div><PrimaryButton type="submit" className="checkout-submit">Buat ringkasan pesanan <Icon name="arrow" size={18} /></PrimaryButton></form><aside className="order-summary"><div className="summary-kicker">Ringkasan</div><img src={product.image} alt={product.alt} width="700" height="560" loading="lazy" decoding="async" /><div className="summary-body"><h2>{product.name}</h2><p>{product.short}</p><div className="summary-line"><span>Jumlah</span><strong>{quantity} porsi</strong></div><div className="summary-line"><span>Channel</span><strong>{channel === 'whatsapp' ? 'WhatsApp' : channel === 'gofood' ? 'GoFood' : 'GrabFood'}</strong></div><div className="summary-note">Harga dan ketersediaan dikonfirmasi sebelum pesanan diproses.</div></div></aside></div></section>{submitted && <div className="success-banner"><div className="container success-inner"><div><span className="success-icon"><Icon name="check" size={17} /></span><strong>Ringkasan pesanan siap.</strong><p>{orderChannels[channel] ? 'Lanjutkan ke channel pilihanmu untuk konfirmasi.' : 'Salin ringkasan ini dan kirim ke channel resmi Ayam Hijrah setelah link dikonfirmasi.'}</p></div><div className="success-actions"><button className="button button-dark" onClick={copySummary}><Icon name="copy" size={16} /> Salin ringkasan</button>{orderChannels[channel] ? <a className="button button-primary" href={orderChannels[channel]}>Lanjutkan <Icon name="arrow" size={16} /></a> : <button className="button button-secondary" disabled>Link segera aktif</button>}</div></div></div>}</main>
+}
 
-        <section className="sedekah section-honey" id="sedekah">
-          <div className="container sedekah-grid"><div className="sedekah-copy"><div className="eyebrow"><span className="eyebrow-line" /> Sedekah Langit</div><h2>Makan enak.<br /><span>Berbagi kebaikan.</span></h2><p>Bagi Ayam Hijrah, perjalanan ini bukan hanya tentang bertumbuh sebagai usaha. Sedekah Langit menjadi ruang untuk berbagi melalui makanan dan mengajak lebih banyak orang ikut dalam kebaikan.</p><div className="sedekah-actions"><button className="button button-dark" onClick={() => scrollTo('partnership')}>Kenal program <Icon name="arrow" size={17} /></button><button className="text-link text-link-dark">Ikut berbagi <Icon name="arrow" size={17} /></button></div><small className="disclaimer">Cerita aktivitas dan mekanisme kontribusi akan ditampilkan berdasarkan dokumentasi terverifikasi.</small></div><div className="sedekah-art"><div className="sun-disc" /><div className="share-card"><span className="share-icon">✦</span><strong>Yang baik,<br />dibagikan.</strong><small>HONEY × FIRE × HIJRAH</small></div><div className="art-leaf leaf-one" /><div className="art-leaf leaf-two" /></div></div>
-        </section>
+function EditorialPage({ type, navigate }) {
+  const isStory = type === 'story'
+  const isCatering = type === 'catering'
+  const title = isStory ? 'Satu keputusan untuk hijrah.' : isCatering ? 'Nasi box yang enak. Pesanan besar yang nggak bikin repot.' : 'Makan enak. Berbagi kebaikan.'
+  const eyebrow = isStory ? 'Cerita kami' : isCatering ? 'Nasi box & catering' : 'Sedekah Langit'
+  const body = isStory ? founderStory.body : isCatering ? [siteCopy.catering.body, 'Kami membantu kebutuhan nasi box untuk kantor, meeting, sekolah, pengajian, gathering, dan acara. Detail paket, jumlah porsi, waktu, lokasi, serta kebutuhan invoice dikonfirmasi bersama tim Ayam Hijrah.'] : [sedekahLangit.body, sedekahLangit.detail, 'Dokumentasi, aktivitas, dan mekanisme kontribusi akan diperbarui berdasarkan data yang telah dikonfirmasi.']
+  const lead = isStory ? founderStory.intro : isCatering ? 'Sampaikan kebutuhan acara dan tim Ayam Hijrah akan membantu menyiapkan penawaran yang sesuai.' : sedekahLangit.detail
+  return <main className="inner-page"><section className="inner-hero section-dark"><div className="container"><div className="eyebrow eyebrow-light"><span className="eyebrow-line" /> {eyebrow}</div><h1>{title}</h1><p>{lead}</p></div></section><section className="editorial-section section-light"><div className="container editorial-layout"><div className="editorial-aside"><div className="story-label editorial-label">HONEY × FIRE<br /><strong>× HIJRAH</strong></div><SmartLink className="text-link" href={isCatering ? '/pesan' : '/menu'} onNavigate={navigate}>{isCatering ? 'Mulai pemesanan' : 'Kembali ke menu'} <Icon name="arrow" size={17} /></SmartLink></div><article className="editorial-copy">{body.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}{isStory && <div className="editorial-timeline">{founderStory.timeline.map((item) => <div key={item.label}><strong>{item.label}</strong><span>{item.text}</span></div>)}</div>}{isCatering && <div className="editorial-callout"><strong>Butuh penawaran?</strong><span>Siapkan tanggal acara, jumlah porsi, lokasi, dan kebutuhan khusus. Tim Ayam Hijrah akan menghubungi untuk konfirmasi.</span><SmartLink className="text-link" href="/pesan?channel=whatsapp" onNavigate={navigate}>Minta penawaran catering <Icon name="arrow" size={16} /></SmartLink></div>}{!isStory && !isCatering && <div className="editorial-callout"><strong>Yang baik, dibagikan.</strong><span>Ikuti update program dan cara berkontribusi melalui channel resmi Ayam Hijrah.</span></div>}</article></div></section></main>
+}
 
-        <section className="location section-cream" id="lokasi">
-          <div className="container location-grid"><div className="map-placeholder"><div className="map-pattern" /><div className="map-pin"><Icon name="pin" size={22} /></div><span>Jagakarsa, Jakarta Selatan</span></div><div className="location-copy"><div className="eyebrow"><span className="eyebrow-line" /> Temui kami</div><h2>Hari ini mau<br /><span>Ayam Hijrah?</span></h2><p>Datang ke outlet atau pesan dari channel favoritmu.</p><div className="address"><Icon name="pin" size={20} /><div><strong>Ayam Hijrah Jagakarsa</strong><span>Jl. Sirsak No.21, Jagakarsa,<br />Jakarta Selatan</span></div></div><div className="hours"><strong>Jam buka</strong><span>Perbarui melalui CMS</span></div><div className="location-actions"><button className="button button-primary" onClick={() => setOrderOpen(true)}>Pesan Sekarang <Icon name="arrow" size={17} /></button><button className="button button-secondary">Petunjuk Arah <Icon name="pin" size={17} /></button></div></div></div>
-        </section>
+const normalizePath = (path) => path.replace(/\/+$/, '') || '/'
 
-        <section className="final-cta section-dark" id="partnership"><div className="container final-cta-inner"><div className="eyebrow eyebrow-light"><span className="eyebrow-line" /> Sampai jumpa di meja makan</div><h2>Hari ini mau<br /><span>Ayam Hijrah?</span></h2><button className="button button-primary button-large" onClick={() => setOrderOpen(true)}>Pesan Sekarang <Icon name="arrow" size={19} /></button><p>Ayam Bakar Madu yang bikin balik lagi.</p></div></section>
-      </main>
-
-      <footer className="site-footer"><div className="container footer-grid"><div><a className="brand brand-footer" href="#top"><span className="brand-mark">AH</span><span className="brand-wordmark"><strong>Ayam</strong><em>Hijrah</em></span></a><p>Ayam Bakar Madu dengan rasa yang punya cerita.</p><div className="socials"><a href="#instagram" aria-label="Instagram"><Icon name="instagram" size={18} /></a><a href="#location" aria-label="Lokasi"><Icon name="pin" size={18} /></a></div></div><div><h3>Jelajahi</h3><a href="#menu">Menu</a><a href="#catering">Catering</a><a href="#cerita">Cerita Kami</a><a href="#sedekah">Sedekah Langit</a></div><div><h3>Pesan</h3><a href="#gofood">GoFood</a><a href="#grabfood">GrabFood</a><a href="#whatsapp">WhatsApp</a><a href="#lokasi">Lokasi Outlet</a></div><div><h3>Kontak</h3><span>Jl. Sirsak No.21<br />Jagakarsa, Jakarta Selatan</span><a href="#whatsapp">WhatsApp resmi</a></div></div><div className="container footer-bottom"><span>© 2026 Ayam Hijrah. Semua hak dilindungi.</span><span>Privacy · Terms</span></div></footer>
-
-      {orderOpen && <div className="modal-backdrop" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && setOrderOpen(false)}><div className="order-modal" role="dialog" aria-modal="true" aria-labelledby="order-title"><button className="modal-close" onClick={() => setOrderOpen(false)} aria-label="Tutup order router"><Icon name="close" size={21} /></button><span className="modal-kicker">Pesan Ayam Hijrah</span><h2 id="order-title">Mau pesan<br /><span>lewat mana?</span></h2><p>Pilih channel yang paling nyaman untukmu.</p><div className="order-options"><a href="#gofood" onClick={() => setOrderOpen(false)}><span className="channel-icon gofood">G</span><span><strong>GoFood</strong><small>Pesan delivery</small></span><Icon name="arrow" size={17} /></a><a href="#grabfood" onClick={() => setOrderOpen(false)}><span className="channel-icon grab">G</span><span><strong>GrabFood</strong><small>Pesan delivery</small></span><Icon name="arrow" size={17} /></a><a href="#whatsapp" onClick={() => setOrderOpen(false)}><span className="channel-icon wa">W</span><span><strong>WhatsApp</strong><small>Chat untuk pesan</small></span><Icon name="arrow" size={17} /></a><a href="#lokasi" onClick={() => { setOrderOpen(false); scrollTo('lokasi') }}><span className="channel-icon outlet"><Icon name="pin" size={18} /></span><span><strong>Datang ke outlet</strong><small>Jagakarsa, Jakarta Selatan</small></span><Icon name="arrow" size={17} /></a></div><small className="modal-note">Link order akan dihubungkan setelah channel resmi dikonfirmasi.</small></div></div>}
-
-      <button className="mobile-sticky-order" onClick={() => setOrderOpen(true)}>Pesan Sekarang <Icon name="arrow" size={17} /></button>
-    </div>
-  )
+function App() {
+  const [route, setRoute] = useState(normalizePath(window.location.pathname))
+  const [orderOpen, setOrderOpen] = useState(false)
+  const navigate = (path) => { window.history.pushState({}, '', path); setRoute(normalizePath(new URL(path, window.location.origin).pathname)); window.scrollTo({ top: 0, behavior: 'smooth' }) }
+  useEffect(() => { const listener = () => setRoute(normalizePath(window.location.pathname)); window.addEventListener('popstate', listener); return () => window.removeEventListener('popstate', listener) }, [])
+  const productSlug = route.startsWith('/menu/') ? route.split('/')[2] : null
+  const product = products.find((item) => item.slug === productSlug)
+  const metadata = useMemo(() => {
+    if (route === '/pesan') return { title: 'Pesan Ayam Hijrah — Ayam Bakar Madu', description: 'Susun pesanan Ayam Hijrah dan pilih channel konfirmasi yang paling nyaman.' }
+    if (route === '/menu') return { title: 'Menu Ayam Hijrah — Ayam Bakar Madu dan Pilihan Lain', description: 'Lihat menu Ayam Hijrah: Ayam Bakar Madu, nasi, ayam pilihan, supporting menu, dan sambal signature.' }
+    if (product) return { title: product.seoTitle, description: product.seoDescription }
+    if (route === '/cerita-kami') return { title: 'Cerita Kami — Ayam Hijrah', description: 'Perjalanan Ayam Hijrah dari dapur rumah, tiga ekor ayam, hingga tumbuh bersama pelanggan.' }
+    if (route === '/sedekah-langit') return { title: 'Sedekah Langit — Ayam Hijrah', description: 'Kenali semangat berbagi Ayam Hijrah melalui program Sedekah Langit.' }
+    if (route === '/catering') return { title: 'Catering dan Nasi Box — Ayam Hijrah', description: 'Kebutuhan nasi box dan catering untuk kantor, meeting, sekolah, pengajian, gathering, dan acara.' }
+    return { title: 'Ayam Hijrah — Ayam Bakar Madu yang Bikin Balik Lagi', description: 'Ayam Bakar Madu khas Ayam Hijrah dengan bumbu meresap, finishing madu, sambal penuh karakter, dan layanan catering di Jagakarsa.' }
+  }, [route, product])
+  useEffect(() => { document.title = metadata.title; document.querySelector('meta[name="description"]')?.setAttribute('content', metadata.description); let canonical = document.querySelector('link[rel="canonical"]'); if (!canonical) { canonical = document.createElement('link'); canonical.rel = 'canonical'; document.head.appendChild(canonical) } canonical.href = `${brand.canonical}${route === '/' ? '/' : `${route}/`}`; document.querySelector('meta[property="og:title"]')?.setAttribute('content', metadata.title); document.querySelector('meta[property="og:description"]')?.setAttribute('content', metadata.description); }, [metadata, route])
+  useEffect(() => { document.body.classList.toggle('modal-open', orderOpen); return () => document.body.classList.remove('modal-open') }, [orderOpen])
+  let page = route === '/' ? <HomePage navigate={navigate} openOrder={() => setOrderOpen(true)} /> : route === '/menu' ? <MenuPage navigate={navigate} /> : route === '/pesan' ? <CheckoutPage navigate={navigate} /> : route === '/cerita-kami' ? <EditorialPage type="story" navigate={navigate} /> : route === '/sedekah-langit' ? <EditorialPage type="sedekah" navigate={navigate} /> : route === '/catering' ? <EditorialPage type="catering" navigate={navigate} /> : route === '/lokasi' ? <EditorialPage type="story" navigate={navigate} /> : product ? <ProductPage navigate={navigate} product={product} /> : <MenuPage navigate={navigate} />
+  return <div className="site-shell"><SiteHeader navigate={navigate} onOrder={() => setOrderOpen(true)} />{page}<SiteFooter navigate={navigate} />{orderOpen && <OrderModal navigate={navigate} close={() => setOrderOpen(false)} />}</div>
 }
 
 export default App
+
+createRoot(document.getElementById('root')).render(<App />)
